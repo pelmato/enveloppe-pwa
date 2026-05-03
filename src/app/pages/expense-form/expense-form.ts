@@ -6,7 +6,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatSuffix } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -29,8 +30,11 @@ import { CATEGORY_COLORS } from '../../shared/colors';
     MatFormField,
     MatLabel,
     MatError,
+    MatSuffix,
     MatInput,
-    MatDatepickerModule,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
     MatSelectModule,
   ],
   templateUrl: './expense-form.html',

@@ -1,13 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardSubtitle,
-  MatCardTitle,
-} from '@angular/material/card';
 import { MatFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
@@ -24,13 +18,9 @@ interface EnvelopeRow extends Envelope, BudgetStats {
 @Component({
   selector: 'app-envelope-list',
   imports: [
+    DatePipe,
     RouterLink,
     MatToolbar,
-    MatCard,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardContent,
     MatFabButton,
     MatIcon,
     MatProgressBar,

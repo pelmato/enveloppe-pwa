@@ -4,24 +4,28 @@
 
 <div class="list">
   @for (row of rows(); track row.id) {
-    <mat-card class="card" [routerLink]="['/envelopes', row.id]">
-      <mat-card-header>
-        <mat-card-title>{{ row.name }}</mat-card-title>
-        <mat-card-subtitle>
-          {{ row.consumed | amount }} / {{ row.budget | amount }}
-          @if (!row.isExpired && row.dailyRemaining !== null) {
-            &nbsp;·&nbsp;{{ row.dailyRemaining | amount }}/j
-          }
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-progress-bar
-          [class.exceeded]="row.consumed > row.budget"
-          mode="determinate"
-          [value]="row.progressPercent"
-        />
-      </mat-card-content>
-    </mat-card>
+    <div class="card" [routerLink]="['/envelopes', row.id]">
+      <div class="card-name">{{ row.name }}</div>
+      <div class="budget-labels">
+        <span>{{ row.consumed | amount }} dépensé</span>
+        <span>{{ row.budget | amount }} total</span>
+      </div>
+      <mat-progress-bar
+        [class.exceeded]="row.consumed > row.budget"
+        mode="determinate"
+        [value]="row.progressPercent"
+      />
+      <div class="budget-details">
+        <span>Reste : {{ row.remaining | amount }}</span>
+        @if (!row.isExpired && row.dailyRemaining !== null) {
+          <span>Budget / jour restant : {{ row.dailyRemaining | amount }}</span>
+        }
+        <span>Fin : {{ row.endDate | date: 'dd/MM/yyyy' }}</span>
+        @if (row.isExpired) {
+          <span class="expired-label">Expiré</span>
+        }
+      </div>
+    </div>
   } @empty {
     <p class="empty">Aucune enveloppe. Commencez par en créer une !</p>
   }

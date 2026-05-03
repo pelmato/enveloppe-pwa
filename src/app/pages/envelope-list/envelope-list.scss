@@ -7,16 +7,42 @@
 }
 
 .card {
+  background: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  padding: 16px;
   cursor: pointer;
+}
 
-  mat-card-content {
-    padding-bottom: 8px;
-  }
+.card-name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.budget-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 .exceeded {
   --mat-linear-progress-active-indicator-color: var(--mat-sys-error);
   --mat-linear-progress-track-color: var(--mat-sys-error-container);
+}
+
+.budget-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.expired-label {
+  color: var(--mat-sys-error);
+  font-weight: 500;
 }
 
 .fab {

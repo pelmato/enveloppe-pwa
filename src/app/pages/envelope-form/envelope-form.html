@@ -3,6 +3,12 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
   <span>{{ isEditMode ? 'Modifier' : 'Nouvelle' }} enveloppe</span>
+  <span class="toolbar-spacer"></span>
+  @if (isEditMode) {
+    <button mat-icon-button type="button" (click)="confirmDelete()" aria-label="Supprimer">
+      <mat-icon>delete</mat-icon>
+    </button>
+  }
 </mat-toolbar>
 
 <div class="form-container">
@@ -93,11 +99,6 @@
       <button mat-raised-button color="primary" type="submit">
         {{ isEditMode ? 'Enregistrer' : 'Créer' }}
       </button>
-      @if (isEditMode) {
-        <button mat-stroked-button color="warn" type="button" (click)="confirmDelete()">
-          Supprimer
-        </button>
-      }
     </div>
 
   </form>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormControl,
@@ -12,7 +12,8 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import { MatSuffix } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnvelopeService } from '../../core/envelope.service';
@@ -38,8 +39,11 @@ interface FormCategory {
     MatFormField,
     MatLabel,
     MatError,
+    MatSuffix,
     MatInput,
-    MatDatepickerModule,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
   ],
   templateUrl: './envelope-form.html',
   styleUrl: './envelope-form.scss',
@@ -51,6 +55,7 @@ export class EnvelopeForm implements OnInit {
   private envelopeService = inject(EnvelopeService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
 
   readonly categoryColors = CATEGORY_COLORS;
 
@@ -82,6 +87,7 @@ export class EnvelopeForm implements OnInit {
           endDate: new Date(envelope.endDate),
         });
         this.categories = await this.envelopeService.getCategories(this.envelopeId);
+        this.cdr.markForCheck();
       }
     } else if (fromId) {
       const source = await this.envelopeService.getById(Number(fromId));
@@ -89,6 +95,7 @@ export class EnvelopeForm implements OnInit {
         this.form.patchValue({ budget: source.budget });
         const sourceCats = await this.envelopeService.getCategories(Number(fromId));
         this.categories = sourceCats.map((c, i) => ({ name: c.name, colorIndex: i }));
+        this.cdr.markForCheck();
       }
     }
   }
