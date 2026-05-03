@@ -1,0 +1,32 @@
+<mat-toolbar color="primary">
+  <span>Mes enveloppes</span>
+</mat-toolbar>
+
+<div class="list">
+  @for (row of rows(); track row.id) {
+    <mat-card class="card" [routerLink]="['/envelopes', row.id]">
+      <mat-card-header>
+        <mat-card-title>{{ row.name }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ row.consumed | amount }} / {{ row.budget | amount }}
+          @if (!row.isExpired && row.dailyRemaining !== null) {
+            &nbsp;·&nbsp;{{ row.dailyRemaining | amount }}/j
+          }
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-progress-bar
+          [class.exceeded]="row.consumed > row.budget"
+          mode="determinate"
+          [value]="row.progressPercent"
+        />
+      </mat-card-content>
+    </mat-card>
+  } @empty {
+    <p class="empty">Aucune enveloppe. Commencez par en créer une !</p>
+  }
+</div>
+
+<button mat-fab class="fab" routerLink="/envelopes/new">
+  <mat-icon>add</mat-icon>
+</button>

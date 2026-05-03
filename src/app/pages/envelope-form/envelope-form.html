@@ -1,0 +1,104 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>{{ isEditMode ? 'Modifier' : 'Nouvelle' }} enveloppe</span>
+</mat-toolbar>
+
+<div class="form-container">
+  <form [formGroup]="form" (ngSubmit)="save()">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>Le nom est obligatoire</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Budget</mat-label>
+      <input matInput type="number" step="0.01" min="0.01" formControlName="budget" />
+      @if (form.controls.budget.hasError('required') && form.controls.budget.touched) {
+        <mat-error>Le budget est obligatoire</mat-error>
+      }
+      @if (form.controls.budget.hasError('min') && form.controls.budget.touched) {
+        <mat-error>Le budget doit être positif</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date de fin</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="endDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="picker" />
+      <mat-datepicker #picker />
+      @if (form.controls.endDate.hasError('required') && form.controls.endDate.touched) {
+        <mat-error>La date de fin est obligatoire</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Catégories -->
+    <div class="categories-section">
+      <p class="section-label">Catégories</p>
+
+      <div class="cat-list">
+        @for (cat of categories; track $index) {
+          <div class="cat-item">
+            @if (editingIndex === $index) {
+              <span class="cat-dot" [style.background]="getCategoryColor(cat)"></span>
+              <input
+                class="rename-input"
+                [(ngModel)]="editingName"
+                [ngModelOptions]="{ standalone: true }"
+                (keyup.enter)="confirmEdit($index)"
+                autofocus
+              />
+              <button mat-icon-button type="button" (click)="confirmEdit($index)">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="cancelEdit()">
+                <mat-icon>close</mat-icon>
+              </button>
+            } @else {
+              <span class="cat-dot" [style.background]="getCategoryColor(cat)"></span>
+              <span class="cat-name">{{ cat.name }}</span>
+              <button mat-icon-button type="button" (click)="startEdit($index)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button type="button" color="warn" (click)="deleteCategory($index)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="add-category">
+        <mat-form-field appearance="outline" class="cat-input">
+          <mat-label>Nouvelle catégorie</mat-label>
+          <input
+            matInput
+            [(ngModel)]="newCategoryName"
+            [ngModelOptions]="{ standalone: true }"
+            (keyup.enter)="addCategory()"
+          />
+        </mat-form-field>
+        <button mat-icon-button type="button" (click)="addCategory()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ isEditMode ? 'Enregistrer' : 'Créer' }}
+      </button>
+      @if (isEditMode) {
+        <button mat-stroked-button color="warn" type="button" (click)="confirmDelete()">
+          Supprimer
+        </button>
+      }
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,93 @@
+@let env = envelope();
+@let st = stats();
+
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  @if (env) {
+    <span>{{ env.name }}</span>
+  }
+  <span class="spacer"></span>
+  <button mat-icon-button [routerLink]="['/envelopes', envelopeId, 'edit']">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    [routerLink]="['/envelopes', 'new']"
+    [queryParams]="{ from: envelopeId }"
+    title="Créer depuis cette enveloppe"
+  >
+    <mat-icon>content_copy</mat-icon>
+  </button>
+</mat-toolbar>
+
+@if (env && st) {
+  <div class="content">
+
+    <!-- Budget summary -->
+    <div class="budget-card">
+      <div class="budget-labels">
+        <span>{{ st.consumed | amount }} dépensé</span>
+        <span>{{ env.budget | amount }} total</span>
+      </div>
+      <mat-progress-bar
+        [class.exceeded]="st.consumed > env.budget"
+        mode="determinate"
+        [value]="st.progressPercent"
+      />
+      <div class="budget-details">
+        <span>Reste : {{ st.remaining | amount }}</span>
+        @if (!st.isExpired && st.dailyRemaining !== null) {
+          <span>Budget / jour restant : {{ st.dailyRemaining | amount }}</span>
+        }
+        <span>Fin : {{ env.endDate | date: 'dd/MM/yyyy' }}</span>
+        @if (st.isExpired) {
+          <span class="expired-label">Expiré</span>
+        }
+      </div>
+    </div>
+
+    <!-- Chart button -->
+    @if (categories().length > 0) {
+      <div class="chart-btn-row">
+        <button mat-stroked-button (click)="showPieChart()">
+          <mat-icon>pie_chart</mat-icon>
+          Répartition par catégorie
+        </button>
+      </div>
+    }
+
+    <!-- Expense list -->
+    <div class="expense-list">
+      @for (expense of expenses(); track expense.id) {
+        <div
+          class="expense-item"
+          [routerLink]="['/envelopes', envelopeId, 'expenses', expense.id]"
+        >
+          <div class="expense-main">
+            <span class="expense-amount">{{ expense.amount | amount }}</span>
+            @if (expense.category) {
+              <span class="cat-chip" [style.background]="getCategoryColor(expense.category)">
+                {{ expense.category.name }}
+              </span>
+            }
+            @if (expense.name) {
+              <span class="expense-name">{{ expense.name }}</span>
+            }
+          </div>
+          <div class="expense-date">
+            {{ expense.date | date: 'dd/MM/yyyy HH:mm' }}
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">Aucune dépense pour l'instant.</p>
+      }
+    </div>
+
+  </div>
+}
+
+<button mat-fab class="fab" [routerLink]="['/envelopes', envelopeId, 'expenses', 'new']">
+  <mat-icon>add</mat-icon>
+</button>

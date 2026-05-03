@@ -1,0 +1,83 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button [routerLink]="['/envelopes', envelopeId]">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>{{ isEditMode ? 'Modifier' : 'Nouvelle' }} dépense</span>
+</mat-toolbar>
+
+@if (envelope()) {
+  <div class="form-container">
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Montant</mat-label>
+        <input matInput type="number" step="0.01" min="0.01" formControlName="amount" />
+        @if (form.controls.amount.hasError('required') && form.controls.amount.touched) {
+          <mat-error>Le montant est obligatoire</mat-error>
+        }
+        @if (form.controls.amount.hasError('min') && form.controls.amount.touched) {
+          <mat-error>Le montant doit être positif</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+        @if (form.controls.date.hasError('required') && form.controls.date.touched) {
+          <mat-error>La date est obligatoire</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Heure</mat-label>
+        <input matInput type="time" formControlName="time" />
+        @if (form.controls.time.hasError('required') && form.controls.time.touched) {
+          <mat-error>L'heure est obligatoire</mat-error>
+        }
+      </mat-form-field>
+
+      @if (hasCategories()) {
+        <mat-form-field appearance="outline">
+          <mat-label>Catégorie</mat-label>
+          <mat-select formControlName="categoryId">
+            @for (cat of categories(); track cat.id) {
+              <mat-option [value]="cat.id">
+                <span class="cat-dot" [style.background]="getCategoryColor(cat)"></span>
+                {{ cat.name }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (form.controls.categoryId.hasError('required') && form.controls.categoryId.touched) {
+            <mat-error>La catégorie est obligatoire</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nom{{ hasCategories() ? ' (optionnel)' : '' }}</mat-label>
+        <input matInput formControlName="name" />
+        @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+          <mat-error>Le nom est obligatoire</mat-error>
+        }
+      </mat-form-field>
+
+      @if (dateError()) {
+        <p class="date-error">{{ dateError() }}</p>
+      }
+
+      <div class="actions">
+        <button mat-raised-button color="primary" type="submit">
+          {{ isEditMode ? 'Enregistrer' : 'Ajouter' }}
+        </button>
+        @if (isEditMode) {
+          <button mat-stroked-button color="warn" type="button" (click)="confirmDelete()">
+            Supprimer
+          </button>
+        }
+      </div>
+
+    </form>
+  </div>
+}

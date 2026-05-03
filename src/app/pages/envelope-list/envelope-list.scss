@@ -1,0 +1,32 @@
+.list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 88px;
+}
+
+.card {
+  cursor: pointer;
+
+  mat-card-content {
+    padding-bottom: 8px;
+  }
+}
+
+.exceeded {
+  --mat-linear-progress-active-indicator-color: var(--mat-sys-error);
+  --mat-linear-progress-track-color: var(--mat-sys-error-container);
+}
+
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}
+
+.empty {
+  text-align: center;
+  color: var(--mat-sys-outline);
+  margin-top: 48px;
+}
