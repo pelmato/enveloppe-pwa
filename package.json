@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production --base-ref /enveloppe-pwa/",
+    "build": "ng build",
+    "build:gh": "ng build --configuration production --base-href /enveloppe-pwa/ && cp dist/enveloppe-pwa/browser/index.html dist/enveloppe-pwa/browser/404.html",
+    "deploy": "npm run build:gh && npx ngh --dir=dist/enveloppe-pwa/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
