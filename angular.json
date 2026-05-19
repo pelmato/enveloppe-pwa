@@ -31,7 +31,8 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "allowedCommonJsDependencies": ["pouchdb", "pouchdb-find", "pouchdb-browser", "spark-md5", "inherits", "lie", "immediate", "events"]
           },
           "configurations": {
             "production": {

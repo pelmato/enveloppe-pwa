@@ -1,8 +1,10 @@
 export interface Expense {
-  id?: number;
-  envelopeId: number;
-  categoryId?: number;
+  _id: string;
+  _rev?: string;
+  type: 'expense';
+  envelopeId: string;
+  categoryId?: string;
   name?: string;
   amount: number;
-  date: Date;
+  date: string;
 }

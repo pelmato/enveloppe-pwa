@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatFabButton } from '@angular/material/button';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { EnvelopeService } from '../../core/envelope.service';
@@ -22,6 +22,7 @@ interface EnvelopeRow extends Envelope, BudgetStats {
     RouterLink,
     MatToolbar,
     MatFabButton,
+    MatIconButton,
     MatIcon,
     MatProgressBar,
     AmountPipe,
@@ -44,7 +45,7 @@ export class EnvelopeList implements OnInit {
     const envelopes = await this.envelopeService.getAll();
     const result: EnvelopeRow[] = await Promise.all(
       envelopes.map(async (env) => {
-        const expenses = await this.expenseService.getByEnvelope(env.id!);
+        const expenses = await this.expenseService.getByEnvelope(env._id);
         const stats = computeBudgetStats(env.budget, env.endDate, expenses);
         return {
           ...env,

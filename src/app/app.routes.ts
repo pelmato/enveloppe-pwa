@@ -31,5 +31,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/expense-form/expense-form').then((m) => m.ExpenseForm),
   },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./pages/settings/settings').then((m) => m.Settings),
+  },
   { path: '**', redirectTo: '' },
 ];

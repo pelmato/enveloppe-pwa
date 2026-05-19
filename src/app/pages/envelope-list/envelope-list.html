@@ -1,10 +1,14 @@
 <mat-toolbar color="primary">
   <span>Mes enveloppes</span>
+  <span class="spacer"></span>
+  <button mat-icon-button routerLink="/settings" aria-label="Synchronisation">
+    <mat-icon>sync</mat-icon>
+  </button>
 </mat-toolbar>
 
 <div class="list">
-  @for (row of rows(); track row.id) {
-    <div class="card" [routerLink]="['/envelopes', row.id]">
+  @for (row of rows(); track row._id) {
+    <div class="card" [routerLink]="['/envelopes', row._id]">
       <div class="card-name">{{ row.name }}</div>
       <div class="budget-labels">
         <span>{{ row.consumed | amount }} dépensé</span>

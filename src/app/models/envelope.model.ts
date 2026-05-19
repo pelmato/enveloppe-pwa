@@ -1,7 +1,9 @@
 export interface Envelope {
-  id?: number;
+  _id: string;
+  _rev?: string;
+  type: 'envelope';
   name: string;
   budget: number;
-  endDate: Date;
-  createdAt: Date;
+  endDate: string;
+  createdAt: string;
 }

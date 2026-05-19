@@ -1,0 +1,70 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button routerLink="/">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>Synchronisation</span>
+</mat-toolbar>
+
+<div class="settings-container">
+
+  <section>
+    <h2>Serveur CouchDB</h2>
+    <p class="hint">
+      Entrez l'URL complète de votre base CouchDB (ex.&nbsp;:
+      <code>https://user:motdepasse&#64;host.example.com/enveloppe-budget</code>).
+      Toutes les personnes partageant la même URL partageront le même budget.
+    </p>
+
+    <mat-form-field appearance="outline" class="url-field">
+      <mat-label>URL CouchDB</mat-label>
+      <input matInput type="url" [(ngModel)]="remoteUrl" placeholder="https://…" />
+      <mat-hint>Les credentials peuvent être inclus dans l'URL (user:password&#64;host).</mat-hint>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="saveUrl()" [disabled]="!remoteUrl">
+        Enregistrer
+      </button>
+      @if (syncService.isConfigured()) {
+        <button mat-stroked-button color="warn" (click)="clearUrl()">
+          Supprimer la configuration
+        </button>
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2>Synchronisation</h2>
+
+    @switch (status()) {
+      @case ('not_configured') {
+        <p class="status-hint">Aucun serveur configuré.</p>
+      }
+      @case ('idle') {
+        <p class="status-ok">
+          Prêt.
+          @if (lastSync()) {
+            Dernière sync&nbsp;: {{ lastSync() | date: 'dd/MM/yyyy HH:mm' }}
+          }
+        </p>
+      }
+      @case ('syncing') {
+        <p class="status-hint">Synchronisation en cours…</p>
+      }
+      @case ('error') {
+        <p class="status-error">Erreur&nbsp;: {{ lastError() }}</p>
+      }
+    }
+
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="syncNow()"
+      [disabled]="!syncService.isConfigured() || syncing()"
+    >
+      <mat-icon>sync</mat-icon>
+      Synchroniser maintenant
+    </button>
+  </section>
+
+</div>

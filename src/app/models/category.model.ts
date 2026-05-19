@@ -1,6 +1,8 @@
 export interface Category {
-  id?: number;
-  envelopeId: number;
+  _id: string;
+  _rev?: string;
+  type: 'category';
+  envelopeId: string;
   name: string;
   colorIndex: number;
 }

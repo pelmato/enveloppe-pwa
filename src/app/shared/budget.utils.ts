@@ -11,7 +11,7 @@ export interface BudgetStats {
 
 export function computeBudgetStats(
   budget: number,
-  endDate: Date,
+  endDate: Date | string,
   expenses: Expense[],
 ): BudgetStats {
   const consumed = expenses.reduce((sum, e) => sum + e.amount, 0);

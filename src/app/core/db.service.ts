@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
-import Dexie, { Table } from 'dexie';
-import { Envelope } from '../models/envelope.model';
-import { Category } from '../models/category.model';
-import { Expense } from '../models/expense.model';
+import PouchDB from 'pouchdb-browser';
+import PouchDBFind from 'pouchdb-find';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+PouchDB.plugin(PouchDBFind as any);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyDB = any;
 
 @Injectable({ providedIn: 'root' })
-export class DbService extends Dexie {
-  envelopes!: Table<Envelope, number>;
-  categories!: Table<Category, number>;
-  expenses!: Table<Expense, number>;
+export class DbService {
+  private readonly _db: AnyDB = new PouchDB('enveloppe-db');
+  readonly ready: Promise<void>;
 
   constructor() {
-    super('enveloppe-db');
-    this.version(1).stores({
-      envelopes: '++id',
-      categories: '++id, envelopeId',
-      expenses: '++id, envelopeId, categoryId',
-    });
+    this.ready = this._init();
+  }
+
+  private async _init(): Promise<void> {
+    await this._db.createIndex({ index: { fields: ['type'] } });
+    await this._db.createIndex({ index: { fields: ['type', 'envelopeId'] } });
+    await this._db.createIndex({ index: { fields: ['type', 'categoryId'] } });
+  }
+
+  async getDb(): Promise<AnyDB> {
+    await this.ready;
+    return this._db;
   }
 }

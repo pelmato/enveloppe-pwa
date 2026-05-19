@@ -48,8 +48,8 @@
         <mat-form-field appearance="outline">
           <mat-label>Catégorie</mat-label>
           <mat-select formControlName="categoryId">
-            @for (cat of categories(); track cat.id) {
-              <mat-option [value]="cat.id">
+            @for (cat of categories(); track cat._id) {
+              <mat-option [value]="cat._id">
                 <span class="cat-dot" [style.background]="getCategoryColor(cat)"></span>
                 {{ cat.name }}
               </mat-option>

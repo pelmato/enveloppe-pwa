@@ -46,14 +46,14 @@ export class EnvelopeDetail implements OnInit {
 
   readonly categoryColors = CATEGORY_COLORS;
 
-  envelopeId!: number;
+  envelopeId!: string;
   envelope = signal<Envelope | null>(null);
   expenses = signal<ExpenseRow[]>([]);
   categories = signal<Category[]>([]);
   stats = signal<BudgetStats | null>(null);
 
   async ngOnInit(): Promise<void> {
-    this.envelopeId = Number(this.route.snapshot.paramMap.get('id'));
+    this.envelopeId = this.route.snapshot.paramMap.get('id')!;
     await this.load();
   }
 
@@ -70,7 +70,7 @@ export class EnvelopeDetail implements OnInit {
     }
 
     this.categories.set(cats);
-    const catMap = new Map(cats.map((c) => [c.id!, c]));
+    const catMap = new Map(cats.map((c) => [c._id, c]));
     const rows: ExpenseRow[] = rawExpenses.map((e) => ({
       ...e,
       category: e.categoryId != null ? catMap.get(e.categoryId) : undefined,
@@ -92,7 +92,7 @@ export class EnvelopeDetail implements OnInit {
       .map((cat) => ({
         label: cat.name,
         amount: exps
-          .filter((e) => e.categoryId === cat.id)
+          .filter((e) => e.categoryId === cat._id)
           .reduce((sum, e) => sum + e.amount, 0),
         colorIndex: cat.colorIndex,
       }))

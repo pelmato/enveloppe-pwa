@@ -22,7 +22,7 @@ import { ConfirmDialog } from '../../shared/components/confirm-dialog/confirm-di
 import { CATEGORY_COLORS } from '../../shared/colors';
 
 interface FormCategory {
-  id?: number;
+  _id?: string;
   name: string;
   colorIndex: number;
 }
@@ -65,7 +65,7 @@ export class EnvelopeForm implements OnInit {
     endDate: new FormControl<Date | null>(null, [Validators.required]),
   });
 
-  envelopeId: number | null = null;
+  envelopeId: string | null = null;
   isEditMode = false;
   categories: FormCategory[] = [];
   newCategoryName = '';
@@ -77,7 +77,7 @@ export class EnvelopeForm implements OnInit {
     const fromId = this.route.snapshot.queryParamMap.get('from');
 
     if (id) {
-      this.envelopeId = Number(id);
+      this.envelopeId = id;
       this.isEditMode = true;
       const envelope = await this.envelopeService.getById(this.envelopeId);
       if (envelope) {
@@ -90,10 +90,10 @@ export class EnvelopeForm implements OnInit {
         this.cdr.markForCheck();
       }
     } else if (fromId) {
-      const source = await this.envelopeService.getById(Number(fromId));
+      const source = await this.envelopeService.getById(fromId);
       if (source) {
         this.form.patchValue({ budget: source.budget });
-        const sourceCats = await this.envelopeService.getCategories(Number(fromId));
+        const sourceCats = await this.envelopeService.getCategories(fromId);
         this.categories = sourceCats.map((c, i) => ({ name: c.name, colorIndex: i }));
         this.cdr.markForCheck();
       }
@@ -125,8 +125,8 @@ export class EnvelopeForm implements OnInit {
       return;
     }
     const cat = this.categories[index];
-    if (this.isEditMode && cat.id) {
-      await this.envelopeService.renameCategory(cat.id, name);
+    if (this.isEditMode && cat._id) {
+      await this.envelopeService.renameCategory(cat._id, name);
     }
     this.categories[index] = { ...cat, name };
     this.editingIndex = null;
@@ -138,9 +138,9 @@ export class EnvelopeForm implements OnInit {
 
   async deleteCategory(index: number): Promise<void> {
     const cat = this.categories[index];
-    if (this.isEditMode && cat.id) {
+    if (this.isEditMode && cat._id) {
       try {
-        await this.envelopeService.deleteCategory(cat.id);
+        await this.envelopeService.deleteCategory(cat._id);
       } catch {
         this.snackBar.open('Cette catégorie est utilisée par des dépenses.', 'OK', {
           duration: 3000,

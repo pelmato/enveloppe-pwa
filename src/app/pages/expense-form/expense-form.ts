@@ -51,8 +51,8 @@ export class ExpenseForm implements OnInit {
 
   readonly categoryColors = CATEGORY_COLORS;
 
-  envelopeId!: number;
-  expenseId: number | null = null;
+  envelopeId!: string;
+  expenseId: string | null = null;
   isEditMode = false;
 
   envelope = signal<Envelope | null>(null);
@@ -64,15 +64,15 @@ export class ExpenseForm implements OnInit {
     amount: new FormControl<number | null>(null, [Validators.required, Validators.min(0.01)]),
     date: new FormControl<Date | null>(null, [Validators.required]),
     time: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-    categoryId: new FormControl<number | null>(null),
+    categoryId: new FormControl<string | null>(null),
     name: new FormControl('', { nonNullable: true }),
   });
 
   async ngOnInit(): Promise<void> {
-    this.envelopeId = Number(this.route.snapshot.paramMap.get('id'));
+    this.envelopeId = this.route.snapshot.paramMap.get('id')!;
     const expenseIdStr = this.route.snapshot.paramMap.get('expenseId');
     if (expenseIdStr) {
-      this.expenseId = Number(expenseIdStr);
+      this.expenseId = expenseIdStr;
       this.isEditMode = true;
     }
 

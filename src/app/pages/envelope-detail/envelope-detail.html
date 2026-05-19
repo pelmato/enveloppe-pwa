@@ -60,10 +60,10 @@
 
     <!-- Expense list -->
     <div class="expense-list">
-      @for (expense of expenses(); track expense.id) {
+      @for (expense of expenses(); track expense._id) {
         <div
           class="expense-item"
-          [routerLink]="['/envelopes', envelopeId, 'expenses', expense.id]"
+          [routerLink]="['/envelopes', envelopeId, 'expenses', expense._id]"
         >
           <div class="expense-main">
             <span class="expense-amount">{{ expense.amount | amount }}</span>
